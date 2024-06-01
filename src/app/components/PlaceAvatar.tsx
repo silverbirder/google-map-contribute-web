@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Avatar } from "@radix-ui/themes";
 import { forwardRef } from "react";
+import { BorderBeam } from "./magicui/border-beam";
 
 interface PlaceAvatarProps {
   position: { x: number; y: number };
@@ -21,6 +22,7 @@ const PlaceAvatar = forwardRef<HTMLDivElement, PlaceAvatarProps>(
         transition={{ duration: 0.5 }}
         style={{ top: position.y, left: position.x }}
       >
+        <BorderBeam size={100} className="h-10 w-10 rounded-full border-2" />
         <Avatar radius="full" src={placeUrl} fallback={`Place ${index + 1}`} />
       </motion.div>
     );

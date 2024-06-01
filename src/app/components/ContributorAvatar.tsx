@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Avatar } from "@radix-ui/themes";
+import { BorderBeam } from "@/components/magicui/border-beam";
 import { forwardRef } from "react";
 
 const ContributorAvatar = forwardRef<HTMLDivElement>((_, ref) => {
@@ -15,6 +16,7 @@ const ContributorAvatar = forwardRef<HTMLDivElement>((_, ref) => {
       transition={{ duration: 0.5 }}
       style={{ top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
     >
+      <BorderBeam size={100} className="h-10 w-10 rounded-full border-2" />
       <Avatar radius="full" src={contributorUrl} fallback="Contributor" />
     </motion.div>
   );
