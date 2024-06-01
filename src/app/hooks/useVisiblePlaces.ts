@@ -7,7 +7,7 @@ export const useVisiblePlaces = (placeCount: number) => {
     if (visiblePlaces < placeCount) {
       const timeout = setTimeout(() => {
         setVisiblePlaces((prev) => prev + 1);
-      }, 500); // Adjust the delay between places as needed
+      }, 500);
       return () => clearTimeout(timeout);
     }
   }, [visiblePlaces, placeCount]);

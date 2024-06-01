@@ -14,12 +14,11 @@ const CustomBeamDemo: React.FC = () => {
   const placeRefs = useRef(
     Array.from({ length: 20 }, () => useRef<HTMLDivElement>(null))
   );
-
-  const positions = usePositions(
-    placeRefs.current,
+  const positions = usePositions({
     containerRef,
-    contributorRef
-  );
+    centerRef: contributorRef,
+    surroundingRefs: placeRefs.current,
+  });
   const visiblePlaces = useVisiblePlaces(placeRefs.current.length);
 
   return (
