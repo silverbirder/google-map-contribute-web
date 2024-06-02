@@ -26,7 +26,10 @@ const CustomBeamDemo: React.FC = () => {
       ref={containerRef}
       className="relative flex w-full h-screen items-center justify-center overflow-hidden rounded-lg border bg-background p-10 md:shadow-xl"
     >
-      <ContributorAvatar ref={contributorRef} />
+      <ContributorAvatar
+        ref={contributorRef}
+        position={{ x: "50%", y: "50%" }}
+      />
       {positions.map((position, index) => (
         <AnimatePresence key={index}>
           {index < visiblePlaces && (
