@@ -49,22 +49,23 @@ export default function RootLayout({
                 </p>
                 <nav className="flex items-center gap-4">
                   <Link
-                    href="#"
+                    href="/privacy"
                     className="hover:text-primary text-sm transition-colors"
                     prefetch={false}
                   >
                     Privacy
                   </Link>
                   <Link
-                    href="#"
+                    href="/terms"
                     className="hover:text-primary text-sm transition-colors"
                     prefetch={false}
                   >
                     Terms
                   </Link>
                   <Link
-                    href="#"
+                    href="https://forms.gle/h4D8TuVAkstkaJZo8"
                     className="hover:text-primary text-sm transition-colors"
+                    target="_blank"
                     prefetch={false}
                   >
                     Contact

@@ -14,7 +14,7 @@ import {
 } from "~/components/ui/card";
 import { Label } from "~/components/ui/label";
 
-export default function Component() {
+export default function Page() {
   const [step, setStep] = useState(1);
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
