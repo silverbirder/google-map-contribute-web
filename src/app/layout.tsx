@@ -39,16 +39,7 @@ export default function RootLayout({
       <body>
         <TRPCReactProvider>
           <div className="bg-background text-foreground flex min-h-screen flex-col">
-            <header className="bg-background sticky top-0 z-10 border-b">
-              <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-                <div className="flex items-center gap-4">
-                  <Link href="#" className="text-lg font-bold" prefetch={false}>
-                    クチコミ仲間
-                  </Link>
-                </div>
-              </div>
-            </header>
-            <main className="container flex-1 px-4 py-8 md:px-6">
+            <main className="flex flex-1 flex-col items-center px-4 py-4 md:px-6 md:py-24">
               {children}
             </main>
             <footer className="bg-muted/20 border-t py-4">
