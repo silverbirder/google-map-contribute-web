@@ -1,6 +1,6 @@
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Metadata } from "next";
+import { type Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "プライバシーポリシー",

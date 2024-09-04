@@ -19,8 +19,8 @@ export default function Page() {
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText("https://www.google.com/maps/contrib/");
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText("https://www.google.com/maps/contrib/");
     setCopied(true);
   };
 
@@ -100,7 +100,7 @@ export default function Page() {
           <p className="text-muted-foreground text-sm">注意:</p>
           <ul className="text-muted-foreground list-disc space-y-1 pl-5 text-xs">
             <li>
-              URLが "https://www.google.com/maps/contrib/数字"
+              URLが &quot;https://www.google.com/maps/contrib/数字&quot;
               の形式になるまでお待ちください。
             </li>
           </ul>
