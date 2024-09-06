@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { SearchIcon, CopyIcon, CheckIcon } from "lucide-react";
@@ -18,6 +19,8 @@ export default function Page() {
   const [step, setStep] = useState(1);
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText("https://www.google.com/maps/contrib/");
@@ -26,12 +29,25 @@ export default function Page() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitted URL:", url);
+
+    // 正規表現でURLから数字を抽出
+    const match = /\/contrib\/(\d+)/.exec(url);
+
+    if (match?.[1]) {
+      // 数字があればページ遷移
+      const contributorId = match[1];
+      router.push(`/contributes/${contributorId}`);
+    } else {
+      // 数字がなければエラーメッセージをセット
+      setError(
+        "正しいURLを入力してください。URLには投稿者ID (数字) が含まれている必要があります。",
+      );
+    }
   };
 
   return (
     <div className="w-full max-w-xl space-y-6 p-4">
-      <h1 className="text-foreground text-center text-3xl font-bold md:text-5xl">
+      <h1 className="text-center text-3xl font-bold text-foreground md:text-5xl">
         クチコミで
         <br />
         共通の仲間を探そう！
@@ -88,6 +104,7 @@ export default function Page() {
                   onChange={(e) => setUrl(e.target.value)}
                   required
                 />
+                {error && <p className="text-sm text-red-500">{error}</p>}
               </div>
               <Button type="submit">
                 <SearchIcon className="mr-2 h-4 w-4" />
@@ -97,8 +114,8 @@ export default function Page() {
           )}
         </CardContent>
         <CardFooter className="flex flex-col items-start">
-          <p className="text-muted-foreground text-sm">注意:</p>
-          <ul className="text-muted-foreground list-disc space-y-1 pl-5 text-xs">
+          <p className="text-sm text-muted-foreground">注意:</p>
+          <ul className="list-disc space-y-1 pl-5 text-xs text-muted-foreground">
             <li>
               URLが &quot;https://www.google.com/maps/contrib/数字&quot;
               の形式になるまでお待ちください。

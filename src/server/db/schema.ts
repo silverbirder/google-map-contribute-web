@@ -16,7 +16,7 @@ import {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator(
-  (name) => `google-map-contribute-_${name}`,
+  (name) => `google-map-contrib_${name}`,
 );
 
 export const contributor = createTable("contributor", {
