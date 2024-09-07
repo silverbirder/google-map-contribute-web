@@ -34,7 +34,7 @@ export const contributorRouter = createTRPCRouter({
         .limit(1);
 
       if (contributorData.length === 0) {
-        throw new Error("投稿者は見つかりませんでした。");
+        return { contributor: null, similarContributors: [] };
       }
 
       // 類似の投稿者を見つける生SQLクエリ
