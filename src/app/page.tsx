@@ -9,11 +9,11 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
 import { Label } from "~/components/ui/label";
+import { AlertTriangle } from "lucide-react";
 
 export default function Page() {
   const [step, setStep] = useState(1);
@@ -54,7 +54,7 @@ export default function Page() {
       </h1>
       <Card>
         <CardHeader>
-          <CardTitle>Google Maps 投稿者IDを取得</CardTitle>
+          <CardTitle>Google Map 投稿者IDを取得</CardTitle>
           <CardDescription>
             以下の手順に従って、あなたの投稿者IDを見つけましょう。
           </CardDescription>
@@ -64,7 +64,7 @@ export default function Page() {
             <>
               <p className="text-sm">
                 1. 以下のリンクをクリックしてGoogle
-                Mapsの投稿者ページを開きます。
+                Mapの投稿者ページを開きます。
               </p>
               <div className="flex items-center space-x-2">
                 <Input value="https://www.google.com/maps/contrib/" readOnly />
@@ -87,6 +87,21 @@ export default function Page() {
                 2.
                 ページが読み込まれたら、ブラウザのアドレスバーに表示されるURLをコピーしてください。
               </p>
+              <div className="space-y-2 rounded-md border border-yellow-400 bg-yellow-50 p-4">
+                <div className="flex items-center">
+                  <AlertTriangle className="mr-2 h-5 w-5 text-yellow-500" />
+                </div>
+                <ul className="list-disc space-y-1 pl-5 text-sm text-yellow-800">
+                  <li>
+                    Google
+                    Mapアプリが自動的に開く場合があります。そうした場合は、リンクをコピーしてブラウザの別タブで開いてください。
+                  </li>
+                  <li className="break-all">
+                    URLが &quot;https://www.google.com/maps/contrib/数字&quot;
+                    の形式になるまでお待ちください。
+                  </li>
+                </ul>
+              </div>
               <Button onClick={() => setStep(2)}>次へ</Button>
             </>
           )}
@@ -113,15 +128,6 @@ export default function Page() {
             </form>
           )}
         </CardContent>
-        <CardFooter className="flex flex-col items-start">
-          <p className="text-sm text-muted-foreground">注意:</p>
-          <ul className="list-disc space-y-1 pl-5 text-xs text-muted-foreground">
-            <li>
-              URLが &quot;https://www.google.com/maps/contrib/数字&quot;
-              の形式になるまでお待ちください。
-            </li>
-          </ul>
-        </CardFooter>
       </Card>
     </div>
   );

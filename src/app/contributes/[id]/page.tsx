@@ -4,7 +4,7 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Skeleton } from "~/components/ui/skeleton";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, Loader2, MapPin, Star, ArrowRight } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { api } from "~/trpc/react";
 
@@ -57,6 +57,16 @@ export default function Page({ params: { id } }: Props) {
             <p className="text-muted-foreground">
               {contributor.reviewCount} レビュー
             </p>
+            <div className="mt-1 flex flex-wrap space-x-2">
+              <a
+                href={`https://www.google.com/maps/contrib/${contributor.contributorId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-1 text-sm text-blue-600"
+              >
+                <MapPin className="h-4 w-4" />
+              </a>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -69,8 +79,8 @@ export default function Page({ params: { id } }: Props) {
           <div className="space-y-4">
             {similarContributors.map((similar) => (
               <div
-                key={similar.contributorId}
-                className="flex items-center justify-between"
+                key={similar.id}
+                className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex items-center space-x-3">
                   <Avatar>
@@ -87,14 +97,30 @@ export default function Page({ params: { id } }: Props) {
                     <p className="text-sm text-muted-foreground">
                       {similar.reviewCount} レビュー
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      共通の場所: {similar.placeName}
-                    </p>
+                    <div className="mt-1 flex flex-wrap space-x-2">
+                      <a
+                        href={`https://www.google.com/maps/contrib/${similar.contributorId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-1 text-sm text-blue-600"
+                      >
+                        <MapPin className="h-4 w-4" />
+                      </a>
+                      <a
+                        href={`/contributes/${similar.contributorId}`}
+                        className="flex items-center space-x-1 text-sm text-blue-600"
+                      >
+                        <ArrowRight className="h-4 w-4" /> 投稿者ページ
+                      </a>
+                    </div>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  {similar.commonReviews} 件の共通レビュー
-                </p>
+                <div className="flex items-center space-x-2 text-sm text-muted-foreground sm:mt-0">
+                  <Star className="h-4 w-4 text-yellow-500" />{" "}
+                  <span className="font-semibold text-yellow-600">
+                    {similar.commonReviews} 件の共通レビュー
+                  </span>
+                </div>
               </div>
             ))}
           </div>

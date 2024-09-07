@@ -36,11 +36,11 @@ export default function Page() {
                 </h2>
                 <p>
                   当サービスは，ユーザーがGoogle
-                  Mapsのコントリビュータ情報を入力する際に，以下の情報を取得する場合があります：
+                  Mapのコントリビュータ情報を入力する際に，以下の情報を取得する場合があります：
                 </p>
                 <ul className="ml-4 mt-2 list-inside list-disc">
-                  <li>Google Mapsコントリビュータ ID</li>
-                  <li>Google Mapsコントリビュータ ページURL</li>
+                  <li>Google Mapコントリビュータ ID</li>
+                  <li>Google Mapコントリビュータ ページURL</li>
                 </ul>
               </section>
               <section>

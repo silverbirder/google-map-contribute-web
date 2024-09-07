@@ -41,9 +41,10 @@ export const contributorRouter = createTRPCRouter({
       const similarContributorsData = await ctx.db.execute(
         sql`
           SELECT
-            gmcc.id as "contributorId",
+            gmcc.id as "id",
             gmcc.name as "contributorName",
             gmcc.url as "contributorUrl",
+            gmcc."contributorId" as "contributorId",
             gmcc."profileImageUrl" as "contributorProfileImageUrl",
             -- gmcrテーブルでこの投稿者が行った全体のレビュー数を計算
             (SELECT COUNT(*) FROM ${review} r WHERE r.contributor_id = gmcc.id) as "reviewCount",
@@ -83,6 +84,7 @@ export const contributorRouter = createTRPCRouter({
       );
 
       const similarContributors = similarContributorsData as unknown as {
+        id: number;
         contributorId: string;
         contributorName: string;
         contributorProfileImageUrl: string;
@@ -93,8 +95,7 @@ export const contributorRouter = createTRPCRouter({
       }[];
       const filterdSimilarContributors = similarContributors
         .filter(
-          (contributor) =>
-            contributor.contributorId !== (contributorData[0]?.id ?? ""),
+          (contributor) => contributor.id !== (contributorData[0]?.id ?? ""),
         )
         .slice(0, 3);
       return {
