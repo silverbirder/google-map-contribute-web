@@ -6,6 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { api } from "~/trpc/react";
 import { ProfileCard } from "~/app/_components/profile-card";
 import { SimilarContributorsCard } from "~/app/_components/similar-contributors-card";
+import { useState } from "react";
 
 type Props = {
   params: { id: string };
@@ -13,23 +14,41 @@ type Props = {
 
 export default function Page({ params: { id } }: Props) {
   const contributorId = id;
+  const [isUpdatingReviews, setIsUpdatingReviews] = useState(false);
+  const [isUpdatingSimilarContributors, setIsUpdatingSimilarContributors] =
+    useState(false);
 
-  const { data, isLoading, error } =
+  const { data, isLoading, error, refetch } =
     api.contributor.getContributorById.useQuery({
       contributorId: contributorId,
     });
 
-  const handleDataFetch = async () => {
-    // データ取得ロジック
+  const handleUpdateReviews = async () => {
+    setIsUpdatingReviews(true);
+    await refetch();
+    setIsUpdatingReviews(false);
+  };
+
+  const handleUpdateSimilarContributors = async () => {
+    setIsUpdatingSimilarContributors(true);
+    await refetch();
+    setIsUpdatingSimilarContributors(false);
   };
 
   if (isLoading) {
     return (
       <div className="container mx-auto space-y-6 p-4">
-        <ProfileCard contributor={null} isLoading={isLoading} />
+        <ProfileCard
+          contributor={null}
+          isLoading={isLoading}
+          onUpdateReviews={handleUpdateReviews}
+          isUpdating={isUpdatingReviews}
+        />
         <SimilarContributorsCard
           similarContributors={[]}
           isLoading={isLoading}
+          onUpdateSimilarContributors={handleUpdateSimilarContributors}
+          isUpdating={isUpdatingSimilarContributors}
         />
       </div>
     );
@@ -40,17 +59,24 @@ export default function Page({ params: { id } }: Props) {
   }
 
   if (!data?.contributor) {
-    return <NoDataState onFetch={handleDataFetch} />;
+    return <NoDataState onFetch={refetch} />;
   }
 
   const { contributor, similarContributors } = data;
 
   return (
     <div className="container mx-auto space-y-6 p-4">
-      <ProfileCard contributor={contributor} isLoading={false} />
+      <ProfileCard
+        contributor={contributor}
+        isLoading={false}
+        onUpdateReviews={handleUpdateReviews}
+        isUpdating={isUpdatingReviews}
+      />
       <SimilarContributorsCard
         similarContributors={similarContributors}
         isLoading={false}
+        onUpdateSimilarContributors={handleUpdateSimilarContributors}
+        isUpdating={isUpdatingSimilarContributors}
       />
     </div>
   );

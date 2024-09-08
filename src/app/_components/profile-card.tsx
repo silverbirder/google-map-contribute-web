@@ -1,7 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { MapPin } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import { MapPin, Database } from "lucide-react";
 import Link from "next/link";
 
 type Contributor = {
@@ -15,56 +17,121 @@ type Contributor = {
   updatedAt: Date | null;
 };
 
+type BatchStatus = "idle" | "waiting" | "in_progress" | "completed" | "error";
+
 type Props = {
   contributor: Contributor | null;
   isLoading: boolean;
+  onUpdateReviews: () => void;
+  batchStatus?: BatchStatus;
+  isUpdating?: boolean,
 };
 
-export function ProfileCard({ contributor, isLoading }: Props) {
+export function ProfileCard({
+  contributor,
+  isLoading,
+  onUpdateReviews,
+  batchStatus = "idle",
+}: Props) {
+  const getBatchStatusText = (status: BatchStatus) => {
+    switch (status) {
+      case "waiting":
+        return "待機中";
+      case "in_progress":
+        return "クローリング中";
+      case "completed":
+        return "完了";
+      case "error":
+        return "エラー";
+      default:
+        return "";
+    }
+  };
+
+  const getBatchStatusColor = (status: BatchStatus) => {
+    switch (status) {
+      case "waiting":
+        return "bg-yellow-500";
+      case "in_progress":
+        return "bg-blue-500";
+      case "completed":
+        return "bg-green-500";
+      case "error":
+        return "bg-red-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>投稿者プロフィール</CardTitle>
       </CardHeader>
-      <CardContent className="flex items-center space-x-4">
-        {isLoading ? (
-          <Skeleton className="h-20 w-20 rounded-full" />
-        ) : (
-          <Avatar className="h-20 w-20">
-            <AvatarImage
-              src={contributor?.profileImageUrl ?? ""}
-              alt={contributor?.name ?? ""}
-            />
-            <AvatarFallback>{contributor?.name}</AvatarFallback>
-          </Avatar>
-        )}
-        <div>
+      <CardContent>
+        <div className="flex flex-col items-center space-y-4 sm:flex-row sm:items-start sm:space-x-4 sm:space-y-0">
           {isLoading ? (
-            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-20 w-20 rounded-full" />
           ) : (
-            <h2 className="text-2xl font-bold">{contributor?.name}</h2>
+            <Avatar className="h-20 w-20">
+              <AvatarImage
+                src={contributor?.profileImageUrl ?? ""}
+                alt={contributor?.name ?? ""}
+              />
+              <AvatarFallback>{contributor?.name}</AvatarFallback>
+            </Avatar>
           )}
-          {isLoading ? (
-            <Skeleton className="mt-1 h-4 w-24" />
-          ) : (
-            <p className="text-muted-foreground">
-              {`${contributor?.reviewCount ?? 0} レビュー`}
-            </p>
-          )}
-          <div className="mt-1 flex flex-wrap space-x-2">
+          <div className="flex-grow text-center sm:text-left">
             {isLoading ? (
-              <Skeleton className="h-4 w-4" />
+              <Skeleton className="mx-auto h-6 w-40 sm:mx-0" />
             ) : (
-              <Link
-                href={`https://www.google.com/maps/contrib/${contributor?.contributorId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-1 text-sm text-blue-600"
-              >
-                <MapPin className="h-4 w-4" />
-              </Link>
+              <h2 className="text-xl font-bold sm:text-2xl">
+                {contributor?.name}
+              </h2>
             )}
+            {isLoading ? (
+              <Skeleton className="mx-auto mt-1 h-4 w-24 sm:mx-0" />
+            ) : (
+              <p className="text-muted-foreground">
+                {`${contributor?.reviewCount ?? 0} レビュー`}
+              </p>
+            )}
+            <div className="mt-2 flex justify-center space-x-2 sm:justify-start">
+              {isLoading ? (
+                <Skeleton className="h-4 w-4" />
+              ) : (
+                <Link
+                  href={`https://www.google.com/maps/contrib/${contributor?.contributorId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-1 text-sm text-blue-600"
+                >
+                  <MapPin className="h-4 w-4" />
+                  <span>Google Maps プロフィール</span>
+                </Link>
+              )}
+            </div>
           </div>
+        </div>
+        <div className="mt-4 flex flex-col items-center justify-center space-y-2 sm:flex-row sm:justify-end sm:space-x-2 sm:space-y-0">
+          <Button
+            onClick={onUpdateReviews}
+            disabled={
+              isLoading ||
+              ["waiting", "in_progress", "error"].includes(batchStatus)
+            }
+            size="sm"
+          >
+            <Database className="mr-2 h-4 w-4" />
+            データ収集開始
+          </Button>
+          {batchStatus !== "idle" && (
+            <Badge
+              className={`${getBatchStatusColor(batchStatus)} text-center sm:w-auto`}
+            >
+              {getBatchStatusText(batchStatus)}
+            </Badge>
+          )}
         </div>
       </CardContent>
     </Card>
