@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "~/components/ui/button";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Database } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { api } from "~/trpc/react";
 import { ProfileCard } from "~/app/_components/profile-card";
@@ -13,7 +13,7 @@ type Props = {
 
 export default function Page({ params: { id } }: Props) {
   const contributorId = id;
-  const { data, isLoading, error, refetch } =
+  const { data, isLoading, error } =
     api.contributor.getContributorById.useQuery({
       contributorId: contributorId,
     });
@@ -49,7 +49,7 @@ export default function Page({ params: { id } }: Props) {
   }
 
   if (!data?.contributor) {
-    return <NoDataState onFetch={refetch} />;
+    return <NoDataState onFetch={handleUpdateSimilarContributors} />;
   }
 
   const { contributor, similarContributors } = data;
@@ -98,11 +98,12 @@ function NoDataState({ onFetch }: { onFetch: () => void }) {
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>データが見つかりません</AlertTitle>
         <AlertDescription>
-          この投稿者のデータはまだ取得されていません。データを取得しますか？
+          この投稿者のデータはまだありません。データを収集しますか？
         </AlertDescription>
       </Alert>
-      <Button onClick={onFetch} className="mt-4">
-        データを取得する
+      <Button onClick={onFetch} className="sm mt-4">
+        <Database className="mr-2 h-4 w-4" />
+        データ収集開始
       </Button>
     </div>
   );

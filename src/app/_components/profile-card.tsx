@@ -106,7 +106,7 @@ export function ProfileCard({
                   className="flex items-center space-x-1 text-sm text-blue-600"
                 >
                   <MapPin className="h-4 w-4" />
-                  <span>Google Maps プロフィール</span>
+                  <span>Google Map</span>
                 </Link>
               )}
             </div>
