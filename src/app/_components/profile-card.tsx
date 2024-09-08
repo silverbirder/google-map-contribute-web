@@ -24,7 +24,6 @@ type Props = {
   isLoading: boolean;
   onUpdateReviews: () => void;
   batchStatus?: BatchStatus;
-  isUpdating?: boolean,
 };
 
 export function ProfileCard({

@@ -6,7 +6,6 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { api } from "~/trpc/react";
 import { ProfileCard } from "~/app/_components/profile-card";
 import { SimilarContributorsCard } from "~/app/_components/similar-contributors-card";
-import { useState } from "react";
 
 type Props = {
   params: { id: string };
@@ -14,26 +13,17 @@ type Props = {
 
 export default function Page({ params: { id } }: Props) {
   const contributorId = id;
-  const [isUpdatingReviews, setIsUpdatingReviews] = useState(false);
-  const [isUpdatingSimilarContributors, setIsUpdatingSimilarContributors] =
-    useState(false);
-
   const { data, isLoading, error, refetch } =
     api.contributor.getContributorById.useQuery({
       contributorId: contributorId,
     });
+  const createBatchJobMutation = api.google.createBatchJob.useMutation();
 
   const handleUpdateReviews = async () => {
-    setIsUpdatingReviews(true);
-    await refetch();
-    setIsUpdatingReviews(false);
+    await createBatchJobMutation.mutate({ contributorId });
   };
 
-  const handleUpdateSimilarContributors = async () => {
-    setIsUpdatingSimilarContributors(true);
-    await refetch();
-    setIsUpdatingSimilarContributors(false);
-  };
+  const handleUpdateSimilarContributors = async () => {};
 
   if (isLoading) {
     return (
@@ -42,13 +32,11 @@ export default function Page({ params: { id } }: Props) {
           contributor={null}
           isLoading={isLoading}
           onUpdateReviews={handleUpdateReviews}
-          isUpdating={isUpdatingReviews}
         />
         <SimilarContributorsCard
           similarContributors={[]}
           isLoading={isLoading}
           onUpdateSimilarContributors={handleUpdateSimilarContributors}
-          isUpdating={isUpdatingSimilarContributors}
         />
       </div>
     );
@@ -70,13 +58,11 @@ export default function Page({ params: { id } }: Props) {
         contributor={contributor}
         isLoading={false}
         onUpdateReviews={handleUpdateReviews}
-        isUpdating={isUpdatingReviews}
       />
       <SimilarContributorsCard
         similarContributors={similarContributors}
         isLoading={false}
         onUpdateSimilarContributors={handleUpdateSimilarContributors}
-        isUpdating={isUpdatingSimilarContributors}
       />
     </div>
   );

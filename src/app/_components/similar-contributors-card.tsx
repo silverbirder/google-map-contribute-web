@@ -21,7 +21,6 @@ type Props = {
   isLoading: boolean;
   onUpdateSimilarContributors: () => void;
   batchStatus?: BatchStatus;
-  isUpdating?: boolean;
 };
 
 export function SimilarContributorsCard({
