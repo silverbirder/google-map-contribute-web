@@ -20,10 +20,12 @@ export default function Page({ params: { id } }: Props) {
   const createBatchJobMutation = api.google.createBatchJob.useMutation();
 
   const handleUpdateReviews = async () => {
-    await createBatchJobMutation.mutate({ contributorId });
+    createBatchJobMutation.mutate({ contributorId });
   };
 
-  const handleUpdateSimilarContributors = async () => {};
+  const handleUpdateSimilarContributors = async () => {
+    createBatchJobMutation.mutate({ contributorId });
+  };
 
   if (isLoading) {
     return (
