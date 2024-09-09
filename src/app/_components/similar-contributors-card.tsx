@@ -72,7 +72,7 @@ export function SimilarContributorsCard({
         <div className="space-y-4">
           {isLoading ? (
             // ローディング中はスケルトンを表示
-            Array(3)
+            Array(5)
               .fill(null)
               .map((_, index) => (
                 <SimilarContributorCard key={index} isLoading={isLoading} />
