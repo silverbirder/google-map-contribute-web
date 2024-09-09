@@ -39,14 +39,33 @@ export const googleRouter = createTRPCRouter({
         };
       }
 
-      // ステータスを waiting に更新
       await db.insert(batchStatus).values({
         contributorId,
         status: "waiting",
         createdAt: new Date(),
       });
 
-      // Cloud Run Job を実行
+      if (process.env.NODE_ENV === "development") {
+        // 開発環境では擬似的にステータスを更新
+        await sleep(5000);
+        await db.insert(batchStatus).values({
+          contributorId,
+          status: "in_progress",
+          createdAt: new Date(),
+        });
+        await sleep(5000);
+        await db.insert(batchStatus).values({
+          contributorId,
+          status: "completed",
+          createdAt: new Date(),
+        });
+        return {
+          success: true,
+          message: "Batch job simulated in development mode.",
+        };
+      }
+
+      // 本番環境ではCloud Run Job を実行
       await runClient.runJob({
         name: process.env.GOOGLE_CLOUD_RUN_JOB_NAME,
         overrides: {
@@ -70,3 +89,5 @@ export const googleRouter = createTRPCRouter({
       return { success: true, message: "Batch job started." };
     }),
 });
+
+const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));

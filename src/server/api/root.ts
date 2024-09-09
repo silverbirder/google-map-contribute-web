@@ -2,6 +2,7 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { contributorRouter } from "./routers/contributor";
 import { googleRouter } from "./routers/google";
+import { batchStatusRouter } from "./routers/batch-status";
 
 /**
  * This is the primary router for your server.
@@ -9,6 +10,7 @@ import { googleRouter } from "./routers/google";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  batchStatus: batchStatusRouter,
   contributor: contributorRouter,
   google: googleRouter,
 });
