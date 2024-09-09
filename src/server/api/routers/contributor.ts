@@ -93,11 +93,9 @@ export const contributorRouter = createTRPCRouter({
         placeName: string;
         commonReviews: number;
       }[];
-      const filterdSimilarContributors = similarContributors
-        .filter(
-          (contributor) => contributor.id !== (contributorData[0]?.id ?? ""),
-        )
-        .slice(0, 3);
+      const filterdSimilarContributors = similarContributors.filter(
+        (contributor) => contributor.id !== (contributorData[0]?.id ?? ""),
+      );
       return {
         contributor: contributorData[0],
         similarContributors: filterdSimilarContributors,
