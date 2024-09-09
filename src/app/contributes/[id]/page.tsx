@@ -8,6 +8,11 @@ import { api } from "~/trpc/react";
 import { ProfileCard } from "~/app/_components/profile-card";
 import { SimilarContributorsCard } from "~/app/_components/similar-contributors-card";
 import { useEffect } from "react";
+import {
+  type BatchStatus,
+  getBatchStatusColor,
+  getBatchStatusText,
+} from "~/lib/batch-status";
 
 type Props = {
   params: { id: string };
@@ -78,7 +83,7 @@ export default function Page({ params: { id } }: Props) {
   }
 
   const { contributor, similarContributors } = contributorData;
-  console.log(batchStatusData?.status?.status ?? "idle");
+
   return (
     <div className="container mx-auto space-y-6 p-4">
       <ProfileCard
@@ -118,8 +123,6 @@ function ErrorState({
   );
 }
 
-type BatchStatus = "idle" | "waiting" | "in_progress" | "completed" | "error";
-
 function NoDataState({
   onFetch,
   batchStatus = "completed",
@@ -127,36 +130,6 @@ function NoDataState({
   onFetch: () => void;
   batchStatus?: BatchStatus;
 }) {
-  const getBatchStatusText = (status: BatchStatus) => {
-    switch (status) {
-      case "waiting":
-        return "待機中";
-      case "in_progress":
-        return "クローリング中";
-      case "completed":
-        return "完了";
-      case "error":
-        return "エラー";
-      default:
-        return "";
-    }
-  };
-
-  const getBatchStatusColor = (status: BatchStatus) => {
-    switch (status) {
-      case "waiting":
-        return "bg-yellow-500";
-      case "in_progress":
-        return "bg-blue-500";
-      case "completed":
-        return "bg-green-500";
-      case "error":
-        return "bg-red-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
-
   return (
     <div className="container mx-auto p-4">
       <Alert className="flex flex-col items-center">
