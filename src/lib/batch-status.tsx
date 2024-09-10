@@ -1,3 +1,5 @@
+import { Badge } from "~/components/ui/badge";
+
 export type BatchStatus =
   | "idle"
   | "waiting"
@@ -34,3 +36,13 @@ export const getBatchStatusColor = (status: BatchStatus) => {
       return "bg-gray-500";
   }
 };
+
+export function StatusBadge({ batchStatus }: { batchStatus: BatchStatus }) {
+  return (
+    <Badge
+      className={`text-center sm:w-auto ${getBatchStatusColor(batchStatus)}`}
+    >
+      {getBatchStatusText(batchStatus)}
+    </Badge>
+  );
+}

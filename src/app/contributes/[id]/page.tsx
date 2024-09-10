@@ -1,18 +1,13 @@
 "use client";
 
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 import { AlertCircle, Database } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { api } from "~/trpc/react";
 import { ProfileCard } from "~/app/_components/profile-card";
 import { SimilarContributorsCard } from "~/app/_components/similar-contributors-card";
 import { useEffect } from "react";
-import {
-  type BatchStatus,
-  getBatchStatusColor,
-  getBatchStatusText,
-} from "~/lib/batch-status";
+import { type BatchStatus, StatusBadge } from "~/lib/batch-status";
 
 type Props = {
   params: { id: string };
@@ -59,6 +54,7 @@ export default function Page({ params: { id } }: Props) {
           contributor={null}
           isLoading={contributorLoading}
           onUpdateReviews={handleUpdateReviews}
+          batchStatus="idle"
         />
         <SimilarContributorsCard
           similarContributors={[]}
@@ -77,13 +73,12 @@ export default function Page({ params: { id } }: Props) {
     return (
       <NoDataState
         onFetch={handleUpdateSimilarContributors}
-        batchStatus={batchStatusData?.status?.status ?? "idle"}
+        batchStatus={batchStatusData?.status?.status}
       />
     );
   }
 
   const { contributor, similarContributors } = contributorData;
-
   return (
     <div className="container mx-auto space-y-6 p-4">
       <ProfileCard
@@ -147,13 +142,7 @@ function NoDataState({
             <Database className="mr-2 h-4 w-4" />
             データ収集開始
           </Button>
-          {batchStatus !== "idle" && (
-            <Badge
-              className={`${getBatchStatusColor(batchStatus)} text-center`}
-            >
-              {getBatchStatusText(batchStatus)}
-            </Badge>
-          )}
+          {batchStatus !== "idle" && <StatusBadge batchStatus={batchStatus} />}
         </div>
       </Alert>
     </div>

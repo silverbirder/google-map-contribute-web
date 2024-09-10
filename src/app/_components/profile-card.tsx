@@ -2,14 +2,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 import { MapPin, Database } from "lucide-react";
 import Link from "next/link";
-import {
-  type BatchStatus,
-  getBatchStatusColor,
-  getBatchStatusText,
-} from "~/lib/batch-status";
+import { type BatchStatus, StatusBadge } from "~/lib/batch-status";
 
 type Contributor = {
   id: number;
@@ -26,14 +21,14 @@ type Props = {
   contributor: Contributor | null;
   isLoading: boolean;
   onUpdateReviews: () => void;
-  batchStatus?: BatchStatus;
+  batchStatus: BatchStatus;
 };
 
 export function ProfileCard({
   contributor,
   isLoading,
   onUpdateReviews,
-  batchStatus = "idle",
+  batchStatus,
 }: Props) {
   return (
     <Card>
@@ -97,13 +92,7 @@ export function ProfileCard({
             <Database className="mr-2 h-4 w-4" />
             データ収集開始
           </Button>
-          {batchStatus !== "idle" && (
-            <Badge
-              className={`${getBatchStatusColor(batchStatus)} text-center sm:w-auto`}
-            >
-              {getBatchStatusText(batchStatus)}
-            </Badge>
-          )}
+          {batchStatus !== "idle" && <StatusBadge batchStatus={batchStatus} />}
         </div>
       </CardContent>
     </Card>

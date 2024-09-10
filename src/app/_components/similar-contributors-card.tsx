@@ -1,13 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 import { ChevronDown, Database } from "lucide-react";
 import { SimilarContributorCard } from "./similar-contributor-card";
-import {
-  type BatchStatus,
-  getBatchStatusColor,
-  getBatchStatusText,
-} from "~/lib/batch-status";
+import { type BatchStatus, StatusBadge } from "~/lib/batch-status";
 import { useState } from "react";
 
 type SimilarContributor = {
@@ -59,13 +54,7 @@ export function SimilarContributorsCard({
             <Database className="mr-2 h-4 w-4" />
             データ収集開始
           </Button>
-          {batchStatus !== "idle" && (
-            <Badge
-              className={`${getBatchStatusColor(batchStatus)} text-center sm:w-auto`}
-            >
-              {getBatchStatusText(batchStatus)}
-            </Badge>
-          )}
+          {batchStatus !== "idle" && <StatusBadge batchStatus={batchStatus} />}
         </div>
       </CardHeader>
       <CardContent>
