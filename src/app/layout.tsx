@@ -36,35 +36,43 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ja" className={`${GeistSans.variable}`}>
+      <head>
+        <link
+          rel="apple-touch-icon"
+          type="image/png"
+          href="/apple-touch-icon.png"
+        ></link>
+        <link rel="icon" type="image/png" href="/icon-192x192.png"></link>
+      </head>
       <body>
         <TRPCReactProvider>
-          <div className="bg-background text-foreground flex min-h-screen flex-col">
+          <div className="flex min-h-screen flex-col bg-background text-foreground">
             <main className="flex flex-1 flex-col items-center px-4 py-4 md:px-6 md:py-24">
               {children}
             </main>
-            <footer className="bg-muted/20 border-t py-4">
+            <footer className="border-t bg-muted/20 py-4">
               <div className="container flex items-center justify-between px-4 md:px-6">
-                <p className="text-muted-foreground text-sm">
+                <p className="text-sm text-muted-foreground">
                   &copy; 2024 silverbirder. All rights reserved.
                 </p>
                 <nav className="flex items-center gap-4">
                   <Link
                     href="/privacy"
-                    className="hover:text-primary text-sm transition-colors"
+                    className="text-sm transition-colors hover:text-primary"
                     prefetch={false}
                   >
                     Privacy
                   </Link>
                   <Link
                     href="/terms"
-                    className="hover:text-primary text-sm transition-colors"
+                    className="text-sm transition-colors hover:text-primary"
                     prefetch={false}
                   >
                     Terms
                   </Link>
                   <Link
                     href="https://forms.gle/h4D8TuVAkstkaJZo8"
-                    className="hover:text-primary text-sm transition-colors"
+                    className="text-sm transition-colors hover:text-primary"
                     target="_blank"
                     prefetch={false}
                   >
