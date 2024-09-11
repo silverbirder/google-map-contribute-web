@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   keywords: ["クチコミ", "Googleマップ", "コントリビュータ", "口コミ仲間"],
   openGraph: {
     title: "クチコミ仲間",
-    description: "同じ場所をクチコミした人を見つける",
+    description: "共通の場所でクチコミした仲間を探す",
     url: process.env.NEXT_PUBLIC_PUBLIC_URL ?? undefined,
     // images: [],
   },
