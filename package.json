@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@google-cloud/run": "^1.4.0",
+    "@next/third-parties": "^14.2.9",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-label": "^2.1.0",

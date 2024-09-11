@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
@@ -76,6 +77,9 @@ export default function RootLayout({
           </div>
         </TRPCReactProvider>
         <Analytics />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </body>
     </html>
   );
