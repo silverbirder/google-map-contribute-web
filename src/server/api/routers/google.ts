@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { batchStatus } from "~/server/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, and } from "drizzle-orm";
 import { v2 } from "@google-cloud/run";
 import { db } from "~/server/db";
 
@@ -18,15 +18,25 @@ const runClient = new JobsClient({
 
 export const googleRouter = createTRPCRouter({
   createBatchJob: publicProcedure
-    .input(z.object({ contributorId: z.string().min(1) }))
+    .input(
+      z.object({
+        contributorId: z.string().min(1),
+        type: z.enum(["contrib", "contrib-place", "place", "place-contrib"]),
+      }),
+    )
     .mutation(async ({ input }) => {
-      const { contributorId } = input;
+      const { contributorId, type } = input;
 
       // ステータスが waiting または in_progress でないことを確認
       const existingBatchStatus = await db
         .select()
         .from(batchStatus)
-        .where(eq(batchStatus.contributorId, contributorId))
+        .where(
+          and(
+            eq(batchStatus.contributorId, contributorId),
+            eq(batchStatus.type, type),
+          ),
+        )
         .orderBy(desc(batchStatus.createdAt))
         .limit(1);
 
@@ -41,6 +51,7 @@ export const googleRouter = createTRPCRouter({
 
       await db.insert(batchStatus).values({
         contributorId,
+        type,
         status: "waiting",
         createdAt: new Date(),
       });
@@ -50,12 +61,14 @@ export const googleRouter = createTRPCRouter({
         await sleep(5000);
         await db.insert(batchStatus).values({
           contributorId,
+          type,
           status: "in_progress",
           createdAt: new Date(),
         });
         await sleep(5000);
         await db.insert(batchStatus).values({
           contributorId,
+          type,
           status: "completed",
           createdAt: new Date(),
         });
@@ -78,7 +91,7 @@ export const googleRouter = createTRPCRouter({
                 },
                 {
                   name: "TYPE",
-                  value: "contrib",
+                  value: type,
                 },
               ],
             },

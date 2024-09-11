@@ -23,29 +23,39 @@ export default function Page({ params: { id } }: Props) {
     contributorId: contributorId,
   });
 
-  const { data: batchStatusData, refetch: refetchBatchStatus } =
+  const { data: contribBatchStatusData, refetch: refetchContribBatchStatus } =
     api.batchStatus.getLatestBatchStatus.useQuery({
       contributorId: contributorId,
+      type: "contrib",
     });
+
+  const {
+    data: contribPlaceBatchStatusData,
+    refetch: refetchContribPlaceBatchStatus,
+  } = api.batchStatus.getLatestBatchStatus.useQuery({
+    contributorId: contributorId,
+    type: "contrib-place",
+  });
 
   const createBatchJobMutation = api.google.createBatchJob.useMutation();
 
   const handleUpdateReviews = async () => {
-    createBatchJobMutation.mutate({ contributorId });
-    await refetchBatchStatus();
+    createBatchJobMutation.mutate({ contributorId, type: "contrib" });
+    await refetchContribBatchStatus();
   };
 
   const handleUpdateSimilarContributors = async () => {
-    createBatchJobMutation.mutate({ contributorId });
-    await refetchBatchStatus();
+    createBatchJobMutation.mutate({ contributorId, type: "contrib-place" });
+    await refetchContribPlaceBatchStatus();
   };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      void refetchBatchStatus();
+      void refetchContribBatchStatus();
+      void refetchContribPlaceBatchStatus();
     }, 5000);
     return () => clearInterval(intervalId);
-  }, [refetchBatchStatus]);
+  }, [refetchContribBatchStatus, refetchContribPlaceBatchStatus]);
 
   if (contributorLoading) {
     return (
@@ -73,7 +83,7 @@ export default function Page({ params: { id } }: Props) {
     return (
       <NoDataState
         onFetch={handleUpdateSimilarContributors}
-        batchStatus={batchStatusData?.status?.status}
+        batchStatus={contribBatchStatusData?.status?.status}
       />
     );
   }
@@ -85,13 +95,13 @@ export default function Page({ params: { id } }: Props) {
         contributor={contributor}
         isLoading={false}
         onUpdateReviews={handleUpdateReviews}
-        batchStatus={batchStatusData?.status?.status ?? "idle"}
+        batchStatus={contribBatchStatusData?.status?.status ?? "idle"}
       />
       <SimilarContributorsCard
         similarContributors={similarContributors}
         isLoading={false}
         onUpdateSimilarContributors={handleUpdateSimilarContributors}
-        batchStatus={batchStatusData?.status?.status ?? "idle"}
+        batchStatus={contribPlaceBatchStatusData?.status?.status ?? "idle"}
       />
     </div>
   );

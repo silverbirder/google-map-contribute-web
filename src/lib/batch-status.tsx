@@ -37,6 +37,8 @@ export const getBatchStatusColor = (status: BatchStatus) => {
   }
 };
 
+export const typeList = ["contrib", "contrib-place", "place", "place-contrib"];
+
 export function StatusBadge({ batchStatus }: { batchStatus: BatchStatus }) {
   return (
     <Badge
