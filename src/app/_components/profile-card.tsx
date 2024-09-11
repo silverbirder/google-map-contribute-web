@@ -1,7 +1,19 @@
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Skeleton } from "~/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 import { MapPin, Database } from "lucide-react";
 import Link from "next/link";
 import { type BatchStatus, StatusBadge } from "~/lib/batch-status";
@@ -30,6 +42,13 @@ export function ProfileCard({
   onUpdateReviews,
   batchStatus,
 }: Props) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleConfirmUpdate = () => {
+    setIsDialogOpen(false);
+    onUpdateReviews();
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -60,7 +79,7 @@ export function ProfileCard({
               <Skeleton className="mx-auto mt-1 h-4 w-24 sm:mx-0" />
             ) : (
               <p className="text-muted-foreground">
-                {`${contributor?.reviewCount ?? 0} レビュー`}
+                {`${contributor?.reviewCount ?? 0} 件のクチコミ`}
               </p>
             )}
             <div className="mt-2 flex justify-center space-x-2 sm:justify-start">
@@ -81,17 +100,36 @@ export function ProfileCard({
           </div>
         </div>
         <div className="mt-4 flex flex-col items-center justify-center space-y-2 sm:flex-row sm:justify-end sm:space-x-2 sm:space-y-0">
-          <Button
-            onClick={onUpdateReviews}
-            disabled={
-              isLoading ||
-              ["waiting", "in_progress", "error"].includes(batchStatus)
-            }
-            size="sm"
-          >
-            <Database className="mr-2 h-4 w-4" />
-            データ収集開始
-          </Button>
+          <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <Button
+                disabled={
+                  isLoading ||
+                  ["waiting", "in_progress", "error"].includes(batchStatus)
+                }
+                size="sm"
+              >
+                <Database className="mr-2 h-4 w-4" />
+                データ収集開始
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>データ収集の確認</AlertDialogTitle>
+                <AlertDialogDescription>
+                  データ収集を開始しますか？
+                  <br />
+                  1件のクチコミにつき約1分かかります。クチコミの件数に応じて処理時間が変わりますので、ご了承ください。
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirmUpdate}>
+                  開始
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           {batchStatus !== "idle" && <StatusBadge batchStatus={batchStatus} />}
         </div>
       </CardContent>

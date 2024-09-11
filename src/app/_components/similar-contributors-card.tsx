@@ -1,9 +1,20 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { ChevronDown, Database } from "lucide-react";
 import { SimilarContributorCard } from "./similar-contributor-card";
 import { type BatchStatus, StatusBadge } from "~/lib/batch-status";
-import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 
 type SimilarContributor = {
   id: number;
@@ -29,9 +40,15 @@ export function SimilarContributorsCard({
   batchStatus = "idle",
 }: Props) {
   const [visibleCount, setVisibleCount] = useState(5);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const loadMore = () => {
     setVisibleCount((prevCount) => prevCount + 5);
+  };
+
+  const handleConfirmUpdate = () => {
+    setIsDialogOpen(false);
+    onUpdateSimilarContributors();
   };
 
   const visibleContributors = similarContributors.slice(0, visibleCount);
@@ -42,25 +59,43 @@ export function SimilarContributorsCard({
       <CardHeader className="flex flex-col items-center justify-between space-y-2 sm:flex-row sm:space-y-0">
         <CardTitle className="text-center sm:text-left">類似の投稿者</CardTitle>
         <div className="flex flex-col items-center space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0">
-          <Button
-            onClick={onUpdateSimilarContributors}
-            disabled={
-              isLoading ||
-              ["waiting", "in_progress", "error"].includes(batchStatus)
-            }
-            size="sm"
-            variant="outline"
-          >
-            <Database className="mr-2 h-4 w-4" />
-            データ収集開始
-          </Button>
+          <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <Button
+                disabled={
+                  isLoading ||
+                  ["waiting", "in_progress", "error"].includes(batchStatus)
+                }
+                size="sm"
+                variant="outline"
+              >
+                <Database className="mr-2 h-4 w-4" />
+                データ収集開始
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>データ収集の確認</AlertDialogTitle>
+                <AlertDialogDescription>
+                  データ収集を開始しますか？
+                  <br />
+                  1件のクチコミにつき約1分かかります。クチコミの件数に応じて処理時間が変わりますので、ご了承ください。
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirmUpdate}>
+                  開始
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           {batchStatus !== "idle" && <StatusBadge batchStatus={batchStatus} />}
         </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {isLoading ? (
-            // ローディング中はスケルトンを表示
             Array(5)
               .fill(null)
               .map((_, index) => (

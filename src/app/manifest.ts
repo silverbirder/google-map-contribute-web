@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "クチコミ仲間",
     short_name: "クチコミ仲間",
-    description: "クチコミ仲間は、あなたと同じ場所をレビューした仲間を見つけるためのアプリです。お気に入りの場所についてのレビューを共有し、他の人とつながりましょう。",
+    description: "クチコミ仲間は、あなたと同じ場所をクチコミした仲間を見つけるためのアプリです。",
     start_url: "/",
     display: "standalone",
     background_color: "#fff",

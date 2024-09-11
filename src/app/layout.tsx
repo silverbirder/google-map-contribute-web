@@ -11,22 +11,17 @@ export const metadata: Metadata = {
   robots: {
     index: true,
   },
-  title: "クチコミ仲間 | あなたのレビューを共有しよう",
+  title: "クチコミ仲間 | 同じ場所をクチコミした投稿者を見つけよう",
   description:
-    "クチコミ仲間は、あなたと同じ場所をレビューした仲間を見つけるためのアプリです。お気に入りの場所についてのレビューを共有し、他の人とつながりましょう。",
+    "クチコミ仲間は、あなたと同じ場所をクチコミした仲間を見つけるためのアプリです。",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
-  keywords: [
-    "レビュー",
-    "クチコミ",
-    "Googleマップ",
-    "コントリビュータ",
-    "口コミ仲間",
-    "場所レビュー",
-  ],
+  keywords: ["クチコミ", "Googleマップ", "コントリビュータ", "口コミ仲間"],
   openGraph: {
     title: "クチコミ仲間",
-    description: "同じ場所をレビューした人とつながる",
-    // url: "",
+    description: "同じ場所をクチコミした人を見つける",
+    url: process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : undefined,
     // images: [],
   },
 };

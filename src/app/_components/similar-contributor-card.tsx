@@ -43,7 +43,7 @@ export function SimilarContributorCard({ similar, isLoading }: Props) {
             <Skeleton className="mt-1 h-3 w-24" />
           ) : (
             <p className="text-sm text-muted-foreground">
-              {`${similar?.reviewCount ?? 0} レビュー`}
+              {`${similar?.reviewCount ?? 0} 件のクチコミ`}
             </p>
           )}
           <div className="mt-1 flex flex-wrap space-x-2">
@@ -83,7 +83,7 @@ export function SimilarContributorCard({ similar, isLoading }: Props) {
           <>
             <Star className="h-4 w-4 text-yellow-500" />
             <span className="font-semibold text-yellow-600">
-              {similar?.commonReviews ?? 0} 件の共通レビュー
+              {similar?.commonReviews ?? 0} 件の共通クチコミ
             </span>
           </>
         )}
