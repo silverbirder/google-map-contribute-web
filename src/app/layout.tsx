@@ -20,7 +20,6 @@ export const metadata: Metadata = {
     title: "クチコミ仲間",
     description: "共通の場所でクチコミした仲間を探す",
     url: process.env.NEXT_PUBLIC_PUBLIC_URL ?? undefined,
-    // images: [],
   },
 };
 
