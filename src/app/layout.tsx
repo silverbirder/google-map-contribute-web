@@ -44,7 +44,7 @@ export default function RootLayout({
               {children}
             </main>
             <footer className="border-t bg-muted/20 py-4">
-              <div className="container flex items-center justify-between px-4 md:px-6">
+              <div className="flex items-center justify-between px-4 md:px-6">
                 <p className="text-sm text-muted-foreground">
                   &copy; 2024 silverbirder. All rights reserved.
                 </p>
