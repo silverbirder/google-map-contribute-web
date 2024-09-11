@@ -6,8 +6,21 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { api } from "~/trpc/react";
 import { ProfileCard } from "~/app/_components/profile-card";
 import { SimilarContributorsCard } from "~/app/_components/similar-contributors-card";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { type BatchStatus, StatusBadge } from "~/lib/batch-status";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@radix-ui/react-alert-dialog";
+import {
+  AlertDialogHeader,
+  AlertDialogFooter,
+} from "~/components/ui/alert-dialog";
 
 type Props = {
   params: { id: string };
@@ -130,11 +143,16 @@ function ErrorState({
 
 function NoDataState({
   onFetch,
-  batchStatus = "completed",
+  batchStatus = "idle",
 }: {
   onFetch: () => void;
   batchStatus?: BatchStatus;
 }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const handleConfirmUpdate = () => {
+    setIsDialogOpen(false);
+    onFetch();
+  };
   return (
     <div className="container mx-auto p-4">
       <Alert className="flex flex-col items-center">
@@ -144,14 +162,35 @@ function NoDataState({
           この投稿者のデータはまだありません。データを収集しますか？
         </AlertDescription>
         <div className="mt-6 flex flex-col items-center space-y-2">
-          <Button
-            onClick={onFetch}
-            disabled={["waiting", "in_progress", "error"].includes(batchStatus)}
-            className="w-full sm:w-auto"
-          >
-            <Database className="mr-2 h-4 w-4" />
-            データ収集開始
-          </Button>
+          <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <Button
+                disabled={["waiting", "in_progress", "error"].includes(
+                  batchStatus,
+                )}
+                className="w-full sm:w-auto"
+              >
+                <Database className="mr-2 h-4 w-4" />
+                データ収集開始
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>データ収集の確認</AlertDialogTitle>
+                <AlertDialogDescription>
+                  データ収集を開始しますか？
+                  <br />
+                  1件のクチコミにつき約1分かかります。クチコミの件数に応じて処理時間が変わりますので、ご了承ください。
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirmUpdate}>
+                  開始
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           {batchStatus !== "idle" && <StatusBadge batchStatus={batchStatus} />}
         </div>
       </Alert>
