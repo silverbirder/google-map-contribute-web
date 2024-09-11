@@ -19,9 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "クチコミ仲間",
     description: "同じ場所をクチコミした人を見つける",
-    url: process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : undefined,
+    url: process.env.NEXT_PUBLIC_PUBLIC_URL ?? undefined,
     // images: [],
   },
 };
