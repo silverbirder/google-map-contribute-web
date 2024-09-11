@@ -16,8 +16,6 @@ import {
   AlertDialogDescription,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@radix-ui/react-alert-dialog";
-import {
   AlertDialogHeader,
   AlertDialogFooter,
 } from "~/components/ui/alert-dialog";
@@ -95,7 +93,7 @@ export default function Page({ params: { id } }: Props) {
   if (!contributorData?.contributor) {
     return (
       <NoDataState
-        onFetch={handleUpdateSimilarContributors}
+        onFetch={handleUpdateReviews}
         batchStatus={contribBatchStatusData?.status?.status}
       />
     );
