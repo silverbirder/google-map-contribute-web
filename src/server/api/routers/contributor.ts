@@ -48,38 +48,34 @@ export const contributorRouter = createTRPCRouter({
             gmcc."profileImageUrl" as "contributorProfileImageUrl",
             -- gmcrテーブルでこの投稿者が行った全体のレビュー数を計算
             (SELECT COUNT(*) FROM ${review} r WHERE r.contributor_id = gmcc.id) as "reviewCount",
-            -- 共通の場所のレビュー数を計算
-            b.place_name as "placeName",
-            b.common_reviews as "commonReviews"
+            -- 共通の場所のレビュー詳細を取得
+            json_agg(json_build_object(
+              'id', gmp.id,
+              'name', gmp.name,
+              'profileImageUrl', gmp."profileImageUrl",
+              'url', gmp.url
+            )) as "commonReviews"
           FROM
             ${contributor} gmcc
-          LEFT JOIN (
-            SELECT
-              gmcr.contributor_id,
-              string_agg(DISTINCT gmp.name, ', ') as place_name,
-              COUNT(DISTINCT gmcr.place_id) as common_reviews
-            FROM
-              ${review} gmcr
-            JOIN ${place} gmp ON gmcr.place_id = gmp.id
-            WHERE
-              gmcr.place_id IN (
-                SELECT
-                  r.place_id
-                FROM
-                  ${review} r
-                JOIN ${contributor} c ON c.id = r.contributor_id
-                WHERE
-                  c."contributorId" = ${input.contributorId}
-                GROUP BY
-                  r.place_id
-              )
-            GROUP BY
-              gmcr.contributor_id
-          ) b ON gmcc.id = b.contributor_id
+          LEFT JOIN ${review} gmcr ON gmcc.id = gmcr.contributor_id
+          JOIN ${place} gmp ON gmcr.place_id = gmp.id
           WHERE
-            COALESCE(b.common_reviews, 0) >= 3
+            gmcr.place_id IN (
+              SELECT
+                r.place_id
+              FROM
+                ${review} r
+              JOIN ${contributor} c ON c.id = r.contributor_id
+              WHERE
+                c."contributorId" = ${input.contributorId}
+              GROUP BY
+                r.place_id
+            )
+          AND gmcc."contributorId" <> ${input.contributorId} -- 自分自身を除外
+          GROUP BY
+            gmcc.id
           ORDER BY
-            b.common_reviews DESC;
+            COUNT(gmcc.id) DESC;
         `,
       );
 
@@ -90,15 +86,21 @@ export const contributorRouter = createTRPCRouter({
         contributorProfileImageUrl: string;
         contributorUrl: string;
         reviewCount: number;
-        placeName: string;
-        commonReviews: number;
+        commonReviews: Array<{
+          id: number;
+          name: string;
+          profileImageUrl: string;
+          url: string;
+        }>;
       }[];
-      const filterdSimilarContributors = similarContributors.filter(
+
+      const filteredSimilarContributors = similarContributors.filter(
         (contributor) => contributor.id !== (contributorData[0]?.id ?? ""),
       );
+
       return {
         contributor: contributorData[0],
-        similarContributors: filterdSimilarContributors,
+        similarContributors: filteredSimilarContributors,
       };
     }),
 });

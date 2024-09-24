@@ -23,7 +23,12 @@ type SimilarContributor = {
   contributorProfileImageUrl: string;
   contributorUrl: string;
   reviewCount: number;
-  commonReviews: number;
+  commonReviews: Array<{
+    id: number;
+    name: string;
+    profileImageUrl: string;
+    url: string;
+  }>;
 };
 
 type Props = {

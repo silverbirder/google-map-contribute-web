@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { SearchIcon, CopyIcon, CheckIcon } from "lucide-react";
+import {
+  SearchIcon,
+  CopyIcon,
+  CheckIcon,
+  Users,
+  MapPin,
+  Star,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -30,15 +37,12 @@ export default function Page() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 正規表現でURLから数字を抽出
     const match = /\/contrib\/(\d+)/.exec(url);
 
     if (match?.[1]) {
-      // 数字があればページ遷移
       const contributorId = match[1];
       router.push(`/contributes/${contributorId}`);
     } else {
-      // 数字がなければエラーメッセージをセット
       setError(
         "正しいURLを入力してください。URLには投稿者ID (数字) が含まれている必要があります。",
       );
@@ -46,15 +50,20 @@ export default function Page() {
   };
 
   return (
-    <div className="w-full max-w-xl space-y-6 p-4">
-      <h1 className="text-center text-3xl font-bold text-foreground md:text-5xl">
+    <div className="container mx-auto max-w-4xl space-y-12 p-4">
+      <h1 className="text-center text-4xl font-bold text-foreground md:text-6xl">
         クチコミで
         <br />
         共通の仲間を探そう！
       </h1>
+
+      <DemoSection />
+
       <Card>
         <CardHeader>
-          <CardTitle>Google Map 投稿者IDを取得</CardTitle>
+          <CardTitle id="how-to-contribute-id">
+            Google Map 投稿者IDを取得
+          </CardTitle>
           <CardDescription>
             以下の手順に従って、あなたの投稿者IDを見つけましょう。
           </CardDescription>
@@ -112,7 +121,6 @@ export default function Page() {
                   3. コピーしたURLをここに貼り付けてください：
                 </Label>
                 <Input
-                  id="url-input"
                   type="url"
                   placeholder="https://www.google.com/maps/contrib/..."
                   value={url}
@@ -130,5 +138,55 @@ export default function Page() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function DemoSection() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>クチコミ仲間でできること</CardTitle>
+        <CardDescription>
+          あなたと同じ場所をクチコミした人を見つけ、新しい仲間とつながりましょう
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="flex flex-col items-center text-center">
+            <Users className="mb-2 h-12 w-12 text-blue-500" />
+            <h3 className="mb-2 text-lg font-semibold">仲間を見つける</h3>
+            <p className="text-sm text-gray-600">
+              あなたと同じ場所にクチコミを投稿した人を簡単に見つけられます
+            </p>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <MapPin className="mb-2 h-12 w-12 text-green-500" />
+            <h3 className="mb-2 text-lg font-semibold">共通の場所を発見</h3>
+            <p className="text-sm text-gray-600">
+              他の投稿者と共通してクチコミした場所を一目で確認できます
+            </p>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <Star className="mb-2 h-12 w-12 text-yellow-500" />
+            <h3 className="mb-2 text-lg font-semibold">新しい発見</h3>
+            <p className="text-sm text-gray-600">
+              似た趣味を持つ人のクチコミから、新しい場所や体験を見つけられます
+            </p>
+          </div>
+        </div>
+        <div className="mt-8 text-center">
+          <Button
+            size="lg"
+            onClick={() =>
+              document
+                .getElementById("how-to-contribute-id")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
+            今すぐ試してみる
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
