@@ -22,7 +22,6 @@ type SimilarContributor = {
   contributorName: string;
   contributorProfileImageUrl: string;
   contributorUrl: string;
-  reviewCount: number;
   commonReviews: Array<{
     id: number;
     name: string;

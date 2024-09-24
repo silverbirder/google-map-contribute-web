@@ -9,7 +9,6 @@ type SimilarContributor = {
   contributorName: string;
   contributorProfileImageUrl: string;
   contributorUrl: string;
-  reviewCount: number;
   commonReviews: Array<{
     id: number;
     name: string;
@@ -44,13 +43,6 @@ export function SimilarContributorCard({ similar, isLoading }: Props) {
               <Skeleton className="h-4 w-32" />
             ) : (
               <p className="font-medium">{similar?.contributorName}</p>
-            )}
-            {isLoading ? (
-              <Skeleton className="mt-1 h-3 w-24" />
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                {`${similar?.reviewCount ?? 0} 件のクチコミ`}
-              </p>
             )}
             <div className="mt-1 flex flex-wrap space-x-2">
               {isLoading ? (

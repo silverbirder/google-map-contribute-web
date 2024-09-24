@@ -46,9 +46,6 @@ export const contributorRouter = createTRPCRouter({
             gmcc.url as "contributorUrl",
             gmcc."contributorId" as "contributorId",
             gmcc."profileImageUrl" as "contributorProfileImageUrl",
-            -- gmcrテーブルでこの投稿者が行った全体のレビュー数を計算
-            (SELECT COUNT(*) FROM ${review} r WHERE r.contributor_id = gmcc.id) as "reviewCount",
-            -- 共通の場所のレビュー詳細を取得
             json_agg(json_build_object(
               'id', gmp.id,
               'name', gmp.name,
@@ -60,7 +57,8 @@ export const contributorRouter = createTRPCRouter({
           LEFT JOIN ${review} gmcr ON gmcc.id = gmcr.contributor_id
           JOIN ${place} gmp ON gmcr.place_id = gmp.id
           WHERE
-            gmcr.place_id IN (
+            gmcc."contributorId" <> ${input.contributorId}
+            AND gmcr.place_id IN (
               SELECT
                 r.place_id
               FROM
@@ -71,7 +69,6 @@ export const contributorRouter = createTRPCRouter({
               GROUP BY
                 r.place_id
             )
-          AND gmcc."contributorId" <> ${input.contributorId} -- 自分自身を除外
           GROUP BY
             gmcc.id
           ORDER BY
@@ -85,7 +82,6 @@ export const contributorRouter = createTRPCRouter({
         contributorName: string;
         contributorProfileImageUrl: string;
         contributorUrl: string;
-        reviewCount: number;
         commonReviews: Array<{
           id: number;
           name: string;
