@@ -50,7 +50,7 @@ export default function Page() {
   };
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-12 p-4">
+    <div className="container mx-auto space-y-12 p-4">
       <h1 className="text-center text-4xl font-bold text-foreground md:text-6xl">
         クチコミで、共通の仲間を探そう！
       </h1>
