@@ -54,20 +54,16 @@ export const contributorRouter = createTRPCRouter({
             )) as "commonReviews"
           FROM
             ${contributor} gmcc
-          LEFT JOIN ${review} gmcr ON gmcc.id = gmcr.contributor_id
-          JOIN ${place} gmp ON gmcr.place_id = gmp.id
+          INNER JOIN ${review} gmcr ON gmcc.id = gmcr.contributor_id
+          INNER JOIN ${place} gmp ON gmcr.place_id = gmp.id
           WHERE
             gmcc."contributorId" <> ${input.contributorId}
-            AND gmcr.place_id IN (
-              SELECT
-                r.place_id
-              FROM
-                ${review} r
-              JOIN ${contributor} c ON c.id = r.contributor_id
-              WHERE
-                c."contributorId" = ${input.contributorId}
-              GROUP BY
-                r.place_id
+            AND EXISTS (
+              SELECT 1
+              FROM ${review} r
+              INNER JOIN ${contributor} c ON c.id = r.contributor_id
+              WHERE c."contributorId" = ${input.contributorId}
+              AND r.place_id = gmcr.place_id
             )
           GROUP BY
             gmcc.id
