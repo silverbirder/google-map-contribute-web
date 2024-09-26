@@ -51,12 +51,29 @@ export default function Page({ params: { id } }: Props) {
   const createBatchJobMutation = api.google.createBatchJob.useMutation();
 
   const handleUpdateReviews = async () => {
-    createBatchJobMutation.mutate({ contributorId, type: "contrib" });
+    createBatchJobMutation.mutate({
+      contributorId,
+      type: "contrib",
+      startUrls: `https://www.google.com/maps/contrib/${contributorId}/reviews`,
+    });
     await refetchContribBatchStatus();
   };
 
   const handleUpdateSimilarContributors = async () => {
-    createBatchJobMutation.mutate({ contributorId, type: "contrib-place" });
+    createBatchJobMutation.mutate({
+      contributorId,
+      type: "contrib-place",
+      startUrls: `https://www.google.com/maps/contrib/${contributorId}/reviews`,
+    });
+    await refetchContribPlaceBatchStatus();
+  };
+
+  const handleSaveUrls = async (urls: string[]) => {
+    createBatchJobMutation.mutate({
+      contributorId,
+      type: "contrib-place",
+      startUrls: urls.join(","),
+    });
     await refetchContribPlaceBatchStatus();
   };
 
@@ -73,9 +90,11 @@ export default function Page({ params: { id } }: Props) {
       <div className="container mx-auto space-y-6 p-4">
         <ProfileCard
           contributor={null}
+          contributorId={contributorId}
           isLoading={contributorLoading}
           onUpdateReviews={handleUpdateReviews}
           batchStatus="idle"
+          placeBatchStatus="idle"
         />
         <SimilarContributorsCard
           similarContributors={[]}
@@ -104,9 +123,12 @@ export default function Page({ params: { id } }: Props) {
     <div className="container mx-auto space-y-6 p-4">
       <ProfileCard
         contributor={contributor}
+        contributorId={contributorId}
         isLoading={false}
         onUpdateReviews={handleUpdateReviews}
+        onSaveUrls={handleSaveUrls}
         batchStatus={contribBatchStatusData?.status?.status ?? "idle"}
+        placeBatchStatus={contribPlaceBatchStatusData?.status?.status ?? "idle"}
       />
       <SimilarContributorsCard
         similarContributors={similarContributors}

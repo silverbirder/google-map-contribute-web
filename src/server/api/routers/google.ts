@@ -21,11 +21,12 @@ export const googleRouter = createTRPCRouter({
     .input(
       z.object({
         contributorId: z.string().min(1),
+        startUrls: z.string().min(1),
         type: z.enum(["contrib", "contrib-place", "place", "place-contrib"]),
       }),
     )
     .mutation(async ({ input }) => {
-      const { contributorId, type } = input;
+      const { contributorId, startUrls, type } = input;
 
       // ステータスが waiting または in_progress でないことを確認
       const existingBatchStatus = await db
@@ -87,7 +88,7 @@ export const googleRouter = createTRPCRouter({
               env: [
                 {
                   name: "START_URLS",
-                  value: `https://www.google.com/maps/contrib/${contributorId}/reviews`,
+                  value: startUrls,
                 },
                 {
                   name: "TYPE",
