@@ -213,21 +213,10 @@ export function ProfileCard({
                   個別でクチコミ保存
                 </DialogTitle>
               </DialogHeader>
-              <div className="max-h-[60vh] overflow-y-auto pr-2">
-                <DialogDescription className="text-left">
+              <div className="pr-2">
+                <DialogDescription />
+                <div className="text-left">
                   <div className="space-y-4">
-                    <div className="flex items-start space-x-2">
-                      <LinkIcon className="mt-1 h-5 w-5 flex-shrink-0 text-blue-500" />
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          URLの形式:
-                        </p>
-                        <p className="break-all text-sm text-muted-foreground">
-                          https://www.google.com/maps/contrib/{contributorId}
-                          /place/[任意の文字列]
-                        </p>
-                      </div>
-                    </div>
                     <div className="flex items-start space-x-2">
                       <Search className="mt-1 h-5 w-5 flex-shrink-0 text-green-500" />
                       <div>
@@ -253,8 +242,20 @@ export function ProfileCard({
                         </ol>
                       </div>
                     </div>
+                    <div className="flex items-start space-x-2">
+                      <LinkIcon className="mt-1 h-5 w-5 flex-shrink-0 text-blue-500" />
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          URLの形式:
+                        </p>
+                        <p className="break-all text-sm text-muted-foreground">
+                          https://www.google.com/maps/contrib/{contributorId}
+                          /place/[任意の文字列]
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </DialogDescription>
+                </div>
                 <div className="mt-4 space-y-4">
                   {urls.map((url, index) => (
                     <div key={index} className="space-y-2">
@@ -286,10 +287,10 @@ export function ProfileCard({
                         )}
                       </div>
                       {urlErrors[index] && (
-                        <p className="flex items-center text-sm text-red-500">
+                        <div className="flex items-center text-sm text-red-500">
                           <AlertCircle className="mr-1 h-4 w-4" />
                           {urlErrors[index]}
-                        </p>
+                        </div>
                       )}
                     </div>
                   ))}
@@ -310,11 +311,7 @@ export function ProfileCard({
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          {batchStatus !== "idle" && (
-            <div className="w-full sm:w-auto">
-              <StatusBadge batchStatus={batchStatus} />
-            </div>
-          )}
+          {batchStatus !== "idle" && <StatusBadge batchStatus={batchStatus} />}
         </div>
       </CardContent>
     </Card>
