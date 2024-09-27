@@ -19,15 +19,6 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
-import {
   MapPin,
   Database,
   Plus,
@@ -35,6 +26,7 @@ import {
   AlertCircle,
   Link as LinkIcon,
   Search,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { type BatchStatus, StatusBadge } from "~/lib/batch-status";
@@ -193,8 +185,8 @@ export function ProfileCard({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <Dialog open={isUrlModalOpen} onOpenChange={setIsUrlModalOpen}>
-            <DialogTrigger asChild>
+          <AlertDialog open={isUrlModalOpen} onOpenChange={setIsUrlModalOpen}>
+            <AlertDialogTrigger asChild>
               <Button
                 disabled={
                   isLoading ||
@@ -206,15 +198,21 @@ export function ProfileCard({
                 <Database className="mr-2 h-4 w-4" />
                 個別でクチコミ保存
               </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle className="text-center">
-                  個別でクチコミ保存
-                </DialogTitle>
-              </DialogHeader>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="sm:max-w-[425px]">
+              <AlertDialogHeader>
+                <div className="flex items-center justify-between">
+                  <AlertDialogTitle className="text-center">
+                    個別でクチコミ保存
+                  </AlertDialogTitle>
+                  <X
+                    onClick={() => setIsUrlModalOpen(false)}
+                    className="mr-2 h-4 w-4"
+                  />
+                </div>
+              </AlertDialogHeader>
               <div className="pr-2">
-                <DialogDescription />
+                <AlertDialogDescription />
                 <div className="text-left">
                   <div className="space-y-4">
                     <div className="flex items-start space-x-2">
@@ -296,7 +294,7 @@ export function ProfileCard({
                   ))}
                 </div>
               </div>
-              <DialogFooter>
+              <AlertDialogFooter>
                 <Button
                   onClick={handleSaveUrls}
                   disabled={
@@ -308,9 +306,9 @@ export function ProfileCard({
                   <Save className="mr-2 h-4 w-4" />
                   保存
                 </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           {batchStatus !== "idle" && <StatusBadge batchStatus={batchStatus} />}
         </div>
       </CardContent>
