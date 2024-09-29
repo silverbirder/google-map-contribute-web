@@ -87,7 +87,8 @@ export function ProfileCard({
   };
 
   const validateUrl = (url: string): string => {
-    const regex = /^https:\/\/www\.google\.com\/maps\/contrib\/\d+\/place\/.+$/;
+    const regex =
+      /^https:\/\/www\.google\.(com|co\.[a-z]+)\/maps\/contrib\/\d+\/place\/.+$/;
     return url.trim() !== "" && !regex.test(url)
       ? "URLの形式が正しくありません"
       : "";
