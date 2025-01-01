@@ -46,7 +46,8 @@ export default function RootLayout({
             <footer className="border-t bg-muted/20 py-4">
               <div className="flex items-center justify-between px-4 md:px-6">
                 <p className="text-sm text-muted-foreground">
-                  &copy; 2024 silverbirder. All rights reserved.
+                  &copy; {new Date().getFullYear()} silverbirder. All rights
+                  reserved.
                 </p>
                 <nav className="flex items-center gap-4">
                   <Link
