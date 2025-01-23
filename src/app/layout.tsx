@@ -72,6 +72,14 @@ export default function RootLayout({
                   >
                     Contact
                   </Link>
+                  <Link
+                    href="https://sites.google.com/view/silverbirders-services"
+                    className="text-sm transition-colors hover:text-primary"
+                    target="_blank"
+                    prefetch={false}
+                  >
+                    My Services
+                  </Link>
                 </nav>
               </div>
             </footer>
